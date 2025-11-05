@@ -1,12 +1,14 @@
 package com.fernandofigueiroa.workshopmongo.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fernandofigueiroa.workshopmongo.domain.User;
 import com.fernandofigueiroa.workshopmongo.repository.UserRepository;
+import com.fernandofigueiroa.workshopmongo.services.exception.ObjectNotFoundException;
 
 @Service
 public class UserService {
@@ -16,5 +18,20 @@ public class UserService {
 	
 	public List<User> findAll(){
 		return repo.findAll();
+	}
+	
+	public User findById(String id) {
+	    Optional<User> userOptional = repo.findById(id);
+
+	    // Usa o isPresent() para verificar se o Optional contém um valor
+	    if (userOptional.isPresent()) {
+	        // Usa o get() para extrair o valor (User)
+	        return userOptional.get();
+	    } else {
+	        // Lança a exceção se estiver vazio
+	        throw new ObjectNotFoundException(
+	            "Objeto não encontrado. ID: " + id
+	        );
+	    }
 	}
 }

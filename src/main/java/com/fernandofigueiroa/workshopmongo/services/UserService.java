@@ -16,35 +16,49 @@ public class UserService {
 
 	@Autowired
 	private UserRepository repo;
-	
-	public List<User> findAll(){
+
+	public List<User> findAll() {
 		return repo.findAll();
 	}
-	
-	public User findById(String id) {
-	    Optional<User> userOptional = repo.findById(id);
 
-	    // Usa o isPresent() para verificar se o Optional contém um valor
-	    if (userOptional.isPresent()) {
-	        // Usa o get() para extrair o valor (User)
-	        return userOptional.get();
-	    } else {
-	        // Lança a exceção se estiver vazio
-	        throw new ObjectNotFoundException(
-	            "Objeto não encontrado. ID: " + id
-	        );
-	    }
+	public User findById(String id) {
+		Optional<User> userOptional = repo.findById(id);
+
+		// Usa o isPresent() para verificar se o Optional contém um valor
+		if (userOptional.isPresent()) {
+			// Usa o get() para extrair o valor (User)
+			return userOptional.get();
+		} else {
+			// Lança a exceção se estiver vazio
+			throw new ObjectNotFoundException("Objeto não encontrado. ID: " + id);
+		}
 	}
-	
+
 	public User insert(User obj) {
 		return repo.insert(obj);
 	}
-	
+
 	public void delete(String id) {
 		findById(id);
 		repo.deleteById(id);
 	}
-	
+
+	public User update(User obj) {
+
+		User newObj = repo.findById(obj.getId())
+				.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado para o ID: " + obj.getId()));
+
+		updateData(newObj, obj);
+
+		return repo.save(newObj);
+	}
+
+	private void updateData(User newObj, User obj) {
+		newObj.setName(obj.getName());
+		newObj.setEmail(obj.getEmail());
+
+	}
+
 	public User fromDTO(UserDTO objDto) {
 		return new User(objDto.getId(), objDto.getName(), objDto.getEmail());
 	}

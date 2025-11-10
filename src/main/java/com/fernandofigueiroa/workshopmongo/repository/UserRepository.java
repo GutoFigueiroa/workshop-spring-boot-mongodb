@@ -3,9 +3,12 @@ package com.fernandofigueiroa.workshopmongo.repository;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import com.fernandofigueiroa.workshopmongo.domain.Post;
 import com.fernandofigueiroa.workshopmongo.domain.User;
 
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
+
+	
 
 }
